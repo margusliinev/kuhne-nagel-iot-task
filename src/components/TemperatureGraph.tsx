@@ -18,8 +18,8 @@ const TemperatureGraph = ({ messages }) => {
     });
 
     useEffect(() => {
-        const timestamps = messages.map((message) => {
-            const date = new Date(message.message.timestamp);
+        const timestamps = messages.map((entry) => {
+            const date = new Date(entry.message.timestamp);
             const hours = date.getHours().toString().padStart(2, '0');
             const minutes = date.getMinutes().toString().padStart(2, '0');
             const seconds = date.getSeconds().toString().padStart(2, '0');

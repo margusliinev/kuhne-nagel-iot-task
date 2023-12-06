@@ -28,6 +28,7 @@ const qosOption = [
 ];
 
 const Mqtt = () => {
+    const [topic, setTopic] = useState<string | null>(null);
     const [client, setClient] = useState(null);
     const [isSubed, setIsSub] = useState(false);
     const [payload, setPayload] = useState({});
@@ -43,6 +44,33 @@ const Mqtt = () => {
         setConnectStatus('Connecting');
         setClient(mqtt.connect(host, mqttOption));
     };
+
+    useEffect(() => {
+        if (isSubed && topic !== null) {
+            const getRandomValue = () => {
+                const randomDecimal = Math.random();
+                const randomValue = randomDecimal * (100 - 70) + 70;
+                return Math.round(randomValue);
+            };
+
+            const intervalId = setInterval(() => {
+                const testPayload = {
+                    timestamp: new Date(Date.now() + 1000),
+                    machine_id: 'M12345',
+                    device_id: 'D12345',
+                    status: 'normal',
+                    temperature: {
+                        value: getRandomValue(),
+                        unit: 'Celsius',
+                    },
+                };
+
+                mqttPublish({ topic: topic, qos: 0, payload: JSON.stringify(testPayload) });
+            }, 1000);
+
+            return () => clearInterval(intervalId);
+        }
+    }, [isSubed, topic]);
 
     useEffect(() => {
         if (client) {
@@ -83,6 +111,7 @@ const Mqtt = () => {
     const mqttPublish = (context) => {
         if (client) {
             const { topic, qos, payload } = context;
+            console.log(payload);
             client.publish(topic, payload, { qos }, (error) => {
                 if (error) {
                     console.log('Publish error: ', error);
@@ -101,6 +130,7 @@ const Mqtt = () => {
                     return;
                 }
                 console.log(`Subscribe to topics: ${topic}`);
+                setTopic(topic);
                 setIsSub(true);
             });
         }

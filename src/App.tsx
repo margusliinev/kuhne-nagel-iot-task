@@ -1,12 +1,20 @@
-import Mqtt from './components';
-import './index.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import AppPage from './pages/AppPage';
 
 function App() {
-    return (
-        <div className='App'>
-            <Mqtt />
-        </div>
-    );
+    const router = createBrowserRouter([
+        {
+            path: '/',
+            element: <HomePage />,
+        },
+        {
+            path: '/app',
+            element: <AppPage />,
+        },
+    ]);
+
+    return <RouterProvider router={router} />;
 }
 
 export default App;
