@@ -18,7 +18,7 @@ const Receiver = ({ payload }) => {
 
     return (
         <Card title='Receiver'>
-            <List size='small' bordered dataSource={messages} renderItem={renderListItem} />
+            <List size='small' bordered dataSource={messages} renderItem={renderListItem} className='receiver-list' />
         </Card>
     );
 };

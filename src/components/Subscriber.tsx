@@ -33,8 +33,8 @@ const Subscriber = ({ sub, unSub, showUnsub }) => {
                         <Select options={qosOptions} />
                     </Form.Item>
                 </Col>
-                <Col span={8} offset={16} style={{ textAlign: 'right' }}>
-                    <Form.Item>
+                <Col span={20} offset={0} style={{ textAlign: 'left' }}>
+                    <Form.Item style={{ display: 'flex' }}>
                         <Button type='primary' htmlType='submit'>
                             Subscribe
                         </Button>

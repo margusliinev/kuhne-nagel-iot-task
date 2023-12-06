@@ -30,10 +30,10 @@ const Publisher = ({ publish }) => {
                 </Col>
                 <Col span={24}>
                     <Form.Item label='Payload' name='payload'>
-                        <Input.TextArea />
+                        <Input.TextArea style={{ minHeight: '100px' }} />
                     </Form.Item>
                 </Col>
-                <Col span={8} offset={16} style={{ textAlign: 'right' }}>
+                <Col span={8} offset={0} style={{ textAlign: 'left' }}>
                     <Form.Item>
                         <Button type='primary' htmlType='submit'>
                             Publish
