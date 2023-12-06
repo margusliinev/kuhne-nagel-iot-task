@@ -52,7 +52,6 @@ const Mqtt = () => {
             client.on('message', (topic, message) => {
                 const payload = { topic, message: message.toString() };
                 setPayload(payload);
-                console.log(`received message: ${message} from topic: ${topic}`);
             });
         }
     }, [client]);

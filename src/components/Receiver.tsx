@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useAppDispatch } from '../hooks';
 import { Card, List } from 'antd';
+import { useAppSelector } from '../hooks';
+import { setMessages } from '../features/messages/messagesSlice';
 
 const Receiver = ({ payload }) => {
-    const [messages, setMessages] = useState([]);
+    const { messages } = useAppSelector((store) => store.messages);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (payload.topic) {
-            setMessages((messages) => [...messages, payload]);
+            dispatch(setMessages(payload));
         }
-    }, [payload]);
+    }, [dispatch, payload]);
 
     const renderListItem = (item) => (
         <List.Item>
-            <List.Item.Meta title={item.topic} description={item.message} />
+            <List.Item.Meta title={item.topic} description={JSON.stringify(item.message)} />
         </List.Item>
     );
 
