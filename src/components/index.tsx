@@ -1,9 +1,14 @@
 import { createContext, useEffect, useState } from 'react';
+import { useAppSelector } from '../hooks';
 import Connection from './Connection';
 import Publisher from './Publisher';
 import Subscriber from './Subscriber';
 import Receiver from './Receiver';
 import mqtt from 'mqtt';
+import TemperatureGraph from './TemperatureGraph';
+import VibrationsGraph from './VibrationsGraph';
+import PressureGraph from './PressureGraph';
+import HumidityGraph from './HumidityGraph';
 
 export const QosOption = createContext([]);
 
@@ -27,6 +32,12 @@ const Mqtt = () => {
     const [isSubed, setIsSub] = useState(false);
     const [payload, setPayload] = useState({});
     const [connectStatus, setConnectStatus] = useState('Connect');
+    const { messages } = useAppSelector((store) => store.messages);
+
+    const temperatureMessages = messages.filter((message) => message.topic === 'Machine Temperature');
+    const vibrationsMessages = messages.filter((message) => message.topic === 'Machine Vibrations');
+    const pressureMessages = messages.filter((message) => message.topic === 'Machine Pressure');
+    const humidityMessages = messages.filter((message) => message.topic === 'Machine Humidity');
 
     const mqttConnect = (host, mqttOption) => {
         setConnectStatus('Connecting');
@@ -117,6 +128,10 @@ const Mqtt = () => {
                 <Publisher publish={mqttPublish} />
             </QosOption.Provider>
             <Receiver payload={payload} />
+            <TemperatureGraph messages={temperatureMessages} />
+            <VibrationsGraph messages={vibrationsMessages} />
+            <PressureGraph messages={pressureMessages} />
+            <HumidityGraph messages={humidityMessages} />
         </main>
     );
 };
