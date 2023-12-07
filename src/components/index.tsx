@@ -1,76 +1,24 @@
-import { createContext, useEffect, useState } from 'react';
-import { useAppSelector } from '../hooks';
-import Connection from './Connection';
-import Publisher from './Publisher';
-import Subscriber from './Subscriber';
-import Receiver from './Receiver';
-import mqtt from 'mqtt';
+import { useEffect, useState } from 'react';
 import TemperatureGraph from './TemperatureGraph';
 import VibrationsGraph from './VibrationsGraph';
 import PressureGraph from './PressureGraph';
 import HumidityGraph from './HumidityGraph';
+import Connection from './Connection';
+import Publisher from './Publisher';
+import Receiver from './Receiver';
+import Subscriber from './Subscriber';
+import mqtt from 'mqtt';
 
-export const QosOption = createContext([]);
-
-const qosOption = [
-    {
-        label: '0',
-        value: 0,
-    },
-    {
-        label: '1',
-        value: 1,
-    },
-    {
-        label: '2',
-        value: 2,
-    },
-];
-
-const Mqtt = () => {
-    const [topic, setTopic] = useState<string | null>(null);
+export default function Layout() {
     const [client, setClient] = useState(null);
     const [isSubed, setIsSub] = useState(false);
     const [payload, setPayload] = useState({});
     const [connectStatus, setConnectStatus] = useState('Connect');
-    const { messages } = useAppSelector((store) => store.messages);
-
-    const temperatureMessages = messages.filter((message) => message.topic === 'Machine Temperature');
-    const vibrationsMessages = messages.filter((message) => message.topic === 'Machine Vibrations');
-    const pressureMessages = messages.filter((message) => message.topic === 'Machine Pressure');
-    const humidityMessages = messages.filter((message) => message.topic === 'Machine Humidity');
 
     const mqttConnect = (host, mqttOption) => {
         setConnectStatus('Connecting');
         setClient(mqtt.connect(host, mqttOption));
     };
-
-    useEffect(() => {
-        if (isSubed && topic !== null) {
-            const getRandomValue = () => {
-                const randomDecimal = Math.random();
-                const randomValue = randomDecimal * (100 - 70) + 70;
-                return Math.round(randomValue);
-            };
-
-            const intervalId = setInterval(() => {
-                const testPayload = {
-                    timestamp: new Date(Date.now() + 1000),
-                    machine_id: 'M12345',
-                    device_id: 'D12345',
-                    status: 'normal',
-                    temperature: {
-                        value: getRandomValue(),
-                        unit: 'Celsius',
-                    },
-                };
-
-                mqttPublish({ topic: topic, qos: 0, payload: JSON.stringify(testPayload) });
-            }, 1000);
-
-            return () => clearInterval(intervalId);
-        }
-    }, [isSubed, topic]);
 
     useEffect(() => {
         if (client) {
@@ -111,7 +59,6 @@ const Mqtt = () => {
     const mqttPublish = (context) => {
         if (client) {
             const { topic, qos, payload } = context;
-            console.log(payload);
             client.publish(topic, payload, { qos }, (error) => {
                 if (error) {
                     console.log('Publish error: ', error);
@@ -130,7 +77,6 @@ const Mqtt = () => {
                     return;
                 }
                 console.log(`Subscribe to topics: ${topic}`);
-                setTopic(topic);
                 setIsSub(true);
             });
         }
@@ -164,6 +110,4 @@ const Mqtt = () => {
             <HumidityGraph messages={humidityMessages} />
         </main>
     );
-};
-
-export default Mqtt;
+}

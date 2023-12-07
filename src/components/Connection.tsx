@@ -1,6 +1,6 @@
 import { Card, Button, Form, Input, Row, Col, Select } from 'antd';
 
-const Connection = ({ connect, disconnect, connectBtn }) => {
+const Connection = ({ connect, disconnect, connectStatus }) => {
     const [form] = Form.useForm();
     const initialConnectionOptions = {
         protocol: 'ws',
@@ -84,7 +84,7 @@ const Connection = ({ connect, disconnect, connectBtn }) => {
             title='Connection'
             actions={[
                 <Button type='primary' onClick={handleConnect}>
-                    {connectBtn}
+                    {connectStatus}
                 </Button>,
                 <Button danger onClick={handleDisconnect}>
                     Disconnect

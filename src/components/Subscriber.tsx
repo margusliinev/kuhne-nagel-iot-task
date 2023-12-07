@@ -1,15 +1,8 @@
-import { useContext } from 'react';
-import { Card, Form, Input, Row, Col, Button, Select } from 'antd';
-import { QosOption } from './index';
+import { Card, Form, Row, Col, Button, Select } from 'antd';
+import { qosOptions, record, topicOptions } from '../utils';
 
 const Subscriber = ({ sub, unSub, showUnsub }) => {
     const [form] = Form.useForm();
-    const qosOptions = useContext(QosOption);
-
-    const record = {
-        topic: 'testtopic/react',
-        qos: 0,
-    };
 
     const onFinish = (values) => {
         sub(values);
@@ -25,7 +18,7 @@ const Subscriber = ({ sub, unSub, showUnsub }) => {
             <Row gutter={20}>
                 <Col span={12}>
                     <Form.Item label='Topic' name='topic'>
-                        <Input />
+                        <Select options={topicOptions} />
                     </Form.Item>
                 </Col>
                 <Col span={12}>

@@ -1,15 +1,14 @@
-import { useEffect } from 'react';
-import { useAppDispatch } from '../hooks';
-import { Card, List } from 'antd';
-import { useAppSelector } from '../hooks';
+import { useAppSelector, useAppDispatch } from '../hooks';
 import { setMessages } from '../features/messages/messagesSlice';
+import { useEffect } from 'react';
+import { Card, List } from 'antd';
 
 const Receiver = ({ payload }) => {
     const { messages } = useAppSelector((store) => store.messages);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (payload.topic) {
+        if (payload?.topic) {
             dispatch(setMessages(payload));
         }
     }, [dispatch, payload]);

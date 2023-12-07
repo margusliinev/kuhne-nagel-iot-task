@@ -14,11 +14,20 @@ function cleanAndParse(message: string) {
     }
 }
 
+const initialState = {
+    messages: [],
+    parameters: {
+        frequency: 1,
+        machine_id: '',
+        device_id: '',
+        average: null,
+        standardVariation: null,
+    },
+};
+
 const messagesSlice = createSlice({
     name: 'messages',
-    initialState: {
-        messages: [],
-    },
+    initialState,
     reducers: {
         setMessages: (state, action) => {
             const { topic, message } = action.payload;
@@ -28,8 +37,19 @@ const messagesSlice = createSlice({
                 state.messages = [...state.messages, { topic: topic, message: parsedMessage }];
             }
         },
+        setParameters: (state, action) => {
+            const { machine_id, device_id, frequency, average, standardVariation } = action.payload;
+            state.parameters = {
+                ...state.parameters,
+                machine_id,
+                device_id,
+                frequency: parseInt(frequency),
+                average: parseInt(average),
+                standardVariation: parseInt(standardVariation),
+            };
+        },
     },
 });
 
-export const { setMessages } = messagesSlice.actions;
+export const { setMessages, setParameters } = messagesSlice.actions;
 export default messagesSlice.reducer;
