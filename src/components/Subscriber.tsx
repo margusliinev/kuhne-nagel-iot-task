@@ -1,11 +1,19 @@
-import { Card, Form, Row, Col, Button, Select } from 'antd';
+import { Card, Form, Row, Col, Button, Select, Input } from 'antd';
 import { qosOptions, record, topicOptions } from '../utils';
+import { setParameters } from '../features/messages/messagesSlice';
+import { useAppDispatch } from '../hooks';
+import { useNavigate } from 'react-router-dom';
 
 const Subscriber = ({ sub, unSub, showUnsub }) => {
     const [form] = Form.useForm();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const onFinish = (values) => {
-        sub(values);
+        const { topic, qos, average, standardVariation, frequency } = values;
+        dispatch(setParameters({ average, standardVariation, frequency }));
+        sub({ topic, qos });
+        navigate('/app');
     };
 
     const handleUnsub = () => {
@@ -24,6 +32,27 @@ const Subscriber = ({ sub, unSub, showUnsub }) => {
                 <Col span={12}>
                     <Form.Item label='QoS' name='qos'>
                         <Select options={qosOptions} />
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item label='Average Value' name='average'>
+                        <Input />
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item label='Standard Variation' name='standardVariation'>
+                        <Select>
+                            <Select.Option value='10'>10%</Select.Option>
+                            <Select.Option value='20'>20%</Select.Option>
+                            <Select.Option value='30'>30%</Select.Option>
+                            <Select.Option value='40'>40%</Select.Option>
+                            <Select.Option value='50'>50%</Select.Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item label='Frequency (in seconds)' name='frequency'>
+                        <Input />
                     </Form.Item>
                 </Col>
                 <Col span={20} offset={0} style={{ textAlign: 'left' }}>

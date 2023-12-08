@@ -1,7 +1,7 @@
 import { CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Chart as ChartJS } from 'chart.js';
 import { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
 import { getTimestamps } from '../utils';
+import { Line } from 'react-chartjs-2';
 
 const VibrationsGraph = ({ messages }) => {
     ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);

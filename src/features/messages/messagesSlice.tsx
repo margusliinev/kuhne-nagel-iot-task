@@ -37,12 +37,18 @@ const messagesSlice = createSlice({
                 state.messages = [...state.messages, { topic: topic, message: parsedMessage }];
             }
         },
-        setParameters: (state, action) => {
-            const { machine_id, device_id, frequency, average, standardVariation } = action.payload;
+        connectDevices: (state, action) => {
+            const { machine_id, device_id } = action.payload;
             state.parameters = {
                 ...state.parameters,
                 machine_id,
                 device_id,
+            };
+        },
+        setParameters: (state, action) => {
+            const { frequency, average, standardVariation } = action.payload;
+            state.parameters = {
+                ...state.parameters,
                 frequency: parseInt(frequency),
                 average: parseInt(average),
                 standardVariation: parseInt(standardVariation),
@@ -51,5 +57,5 @@ const messagesSlice = createSlice({
     },
 });
 
-export const { setMessages, setParameters } = messagesSlice.actions;
+export const { setMessages, connectDevices, setParameters } = messagesSlice.actions;
 export default messagesSlice.reducer;

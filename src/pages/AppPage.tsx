@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../hooks';
+import { generatePayload } from '../utils';
 import TemperatureGraph from '../components/TemperatureGraph';
 import VibrationsGraph from '../components/VibrationsGraph';
 import PressureGraph from '../components/PressureGraph';
@@ -31,19 +32,13 @@ export default function AppPage() {
     useEffect(() => {
         if (isSubed) {
             const intervalId = setInterval(() => {
-                const deviation = (parameters.average * parameters.standardVariation) / 100;
-                const temperatureValue = parameters.average + (Math.random() * 2 - 1) * deviation;
-
-                const newPayload = {
-                    timestamp: new Date(Date.now()),
-                    machine_id: parameters.machine_id,
-                    device_id: parameters.device_id,
-                    status: 'normal',
-                    temperature: {
-                        value: temperatureValue,
-                        unit: 'Celsius',
-                    },
-                };
+                const newPayload = generatePayload(
+                    topic,
+                    parameters.machine_id,
+                    parameters.device_id,
+                    parameters.average,
+                    parameters.standardVariation
+                );
 
                 mqttPublish({ topic: topic, qos: 0, payload: JSON.stringify(newPayload) });
             }, parameters.frequency * 1000);
@@ -136,9 +131,9 @@ export default function AppPage() {
             <Publisher publish={mqttPublish} />
             <Receiver payload={payload} />
             <TemperatureGraph messages={temperatureMessages} />
-            <VibrationsGraph messages={vibrationsMessages} />
             <PressureGraph messages={pressureMessages} />
             <HumidityGraph messages={humidityMessages} />
+            <VibrationsGraph messages={vibrationsMessages} />
         </main>
     );
 }

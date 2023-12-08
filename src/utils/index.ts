@@ -1,19 +1,19 @@
 export const topicOptions = [
     {
         label: 'Temperature',
-        value: 'Temperature',
+        value: 'Machine Temperature',
     },
     {
         label: 'Vibrations',
-        value: 'Vibrations',
+        value: 'Machine Vibrations',
     },
     {
         label: 'Pressure',
-        value: 'Pressure',
+        value: 'Machine Pressure',
     },
     {
         label: 'Humidity',
-        value: 'Humidity',
+        value: 'Machine Humidity',
     },
 ];
 
@@ -47,4 +47,60 @@ export const getTimestamps = (messages) => {
     });
 
     return timestamps;
+};
+
+export const generatePayload = (topic, machine_id, device_id, average, variation) => {
+    const timestamp = new Date(Date.now());
+    const deviation = (average * variation) / 100;
+    const value = average + (Math.random() * 2 - 1) * deviation;
+    const getRandomAxisValue = () => average + (Math.random() * 2 - 1) * deviation;
+
+    switch (topic) {
+        case 'Machine Temperature':
+            return {
+                timestamp: timestamp,
+                machine_id: machine_id,
+                device_id: device_id,
+                status: 'normal',
+                temperature: {
+                    value: value,
+                    unit: 'Celsius',
+                },
+            };
+        case 'Machine Vibrations':
+            return {
+                timestamp: timestamp,
+                machine_id: machine_id,
+                device_id: device_id,
+                status: 'normal',
+                vibration: {
+                    x_axis: getRandomAxisValue(),
+                    y_axis: getRandomAxisValue(),
+                    z_axis: getRandomAxisValue(),
+                    unit: 'g',
+                },
+            };
+        case 'Machine Pressure':
+            return {
+                timestamp: timestamp,
+                machine_id: machine_id,
+                device_id: device_id,
+                status: 'normal',
+                pressure: {
+                    value: value,
+                    unit: 'kPa',
+                },
+            };
+        case 'Machine Humidity':
+            return {
+                timestamp: timestamp,
+                machine_id: machine_id,
+                device_id: device_id,
+                status: 'normal',
+                humidity: {
+                    value: value,
+                    unit: 'percent',
+                },
+            };
+    }
 };
